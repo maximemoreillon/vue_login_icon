@@ -1,5 +1,8 @@
 <template>
-  <span class="login_status">
+  <span
+    class="login_status"
+    v-on:mouseover="mouseover()"
+    v-on:mouseleave="mouseleave()">
 
 
     <transition name="fade" mode="out-in">
@@ -7,20 +10,46 @@
 
         <!-- MAKE COMPONENT FROM HERE -->
         <template v-if="user">
-          <!-- display user avatar if available -->
-          <img
 
-            v-if="user.properties.avatar_url"
-            v-bind:src="user.properties.avatar_url" >
+          <template v-if="!hover">
+            <!-- display user avatar if available -->
+            <img
+              class="status_icon"
+              v-if="user.properties.avatar_url"
+              v-bind:src="user.properties.avatar_url" >
 
-          <!-- otherwise display generic icon -->
-          <account-icon  v-else />
+            <!-- otherwise display generic icon -->
+            <account-icon
+              v-else
+              class="status_icon" />
+          </template>
+
+          <template v-else>
+
+            <logout-icon
+              class="control_icon"
+              v-on:click="logout()"/>
+          </template>
 
         </template>
+
+
         <!-- MAKE COMPONENT TO HERE -->
 
         <!-- display "not logged in" icon -->
-        <account-off-icon v-else=""/>
+        <template v-else>
+          <account-off-icon
+            v-if="!hover"
+            class="status_icon" />
+
+          <login-icon
+            v-else
+            class="control_icon"
+            v-on:click="login()"/>
+        </template>
+
+
+
       </template>
 
       <Loader v-if="loading"/>
@@ -37,6 +66,8 @@ import Loader from '@moreillon/vue_loader'
 
 import AccountIcon from 'vue-material-design-icons/Account.vue';
 import AccountOffIcon from 'vue-material-design-icons/AccountOff.vue';
+import LoginIcon from 'vue-material-design-icons/Login.vue';
+import LogoutIcon from 'vue-material-design-icons/Logout.vue';
 
 
 export default {
@@ -47,11 +78,14 @@ export default {
     // Icons
     AccountIcon,
     AccountOffIcon,
+    LoginIcon,
+    LogoutIcon,
   },
   data(){
     return {
       user: null,
       loading: false,
+      hover: false,
     }
   },
   mounted(){
@@ -61,6 +95,7 @@ export default {
     check_login_status(){
 
       let jwt = VueCookies.get('jwt')
+
       if(jwt) {
         this.loading = true;
         axios.post('https://authentication.maximemoreillon.com/whoami', {},
@@ -74,7 +109,21 @@ export default {
         })
 
       }
-    }
+    },
+    mouseover(){
+      this.hover = true;
+    },
+    mouseleave(){
+      this.hover = false;
+    },
+    logout(){
+      VueCookies.remove('jwt')
+      // Not very elegant way to deal with this
+      location.reload()
+    },
+    login(){
+      location.href = "https://authentication.maximemoreillon.com/"
+    },
   }
 }
 </script>
@@ -88,6 +137,7 @@ export default {
 
   cursor: pointer;
 }
+
 
 .login_status img {
   height: 1em;
