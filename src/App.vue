@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <LoginStatus/>
+    <LoginStatus
+    authenticationApiUrl="https://api.authentication.maximemoreillon.com/"
+    authenticationFrontUrl="https://authentication.maximemoreillon.com/"/>
   </div>
 </template>
 

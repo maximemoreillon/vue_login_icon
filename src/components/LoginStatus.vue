@@ -1,6 +1,6 @@
 <template>
   <a
-    :href="authentication_front_url"
+    :href="authenticationFrontUrl"
     class="login_status">
 
     <!-- transition from loading to not loading -->
@@ -68,14 +68,23 @@ export default {
     AccountOffIcon,
     AlertCircleOutlineIcon,
   },
+  props: {
+    authenticationApiUrl: {
+      type: String,
+      default(){return process.env.VUE_APP_AUTHENTICATION_API_URL}
+    },
+    authenticationFrontUrl: {
+      type: String,
+      default(){return process.env.VUE_APP_AUTHENTICATION_FRONT_URL}
+    },
+  },
   data(){
     return {
       user: null,
       loading: false,
       hover: false,
       error: false,
-      authentication_api_url: 'https://api.authentication.maximemoreillon.com/whoami',
-      authentication_front_url: 'https://authentication.maximemoreillon.com/',
+
     }
   },
   mounted(){
@@ -88,7 +97,7 @@ export default {
 
       if(jwt) {
         this.loading = true;
-        axios.post(`${this.authentication_api_url}`, {},
+        axios.post(`${this.authenticationApiUrl}/whoami`, {},
         { headers: { Authorization : `Bearer ${jwt}`} })
         .then(response => {
           this.user = response.data
