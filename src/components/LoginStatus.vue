@@ -8,13 +8,14 @@
       name="fade"
       mode="out-in">
 
-      <!-- if loading -->
+      <alert-circle-outline-icon
+        v-if="error || !authenticationApiUrl || !authenticationFrontUrl"/>
+
       <Loader
-        v-if="loading"
+        v-else-if="loading"
         class="loader"/>
 
-      <alert-circle-outline-icon
-        v-else-if="error"/>
+
 
       <!-- If not loading or errored -->
       <template v-else >
@@ -71,11 +72,9 @@ export default {
   props: {
     authenticationApiUrl: {
       type: String,
-      default(){return process.env.VUE_APP_AUTHENTICATION_API_URL}
     },
     authenticationFrontUrl: {
       type: String,
-      default(){return process.env.VUE_APP_AUTHENTICATION_FRONT_URL}
     },
   },
   data(){
