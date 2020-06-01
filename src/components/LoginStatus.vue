@@ -25,8 +25,8 @@
           <!-- display user avatar if available -->
           <img
             class="avatar"
-            v-if="user.properties.avatar_url"
-            v-bind:src="user.properties.avatar_url" >
+            v-if="user.properties.avatar_src"
+            v-bind:src="user.properties.avatar_src" >
 
           <!-- otherwise display generic icon -->
           <account-icon
@@ -72,9 +72,11 @@ export default {
   props: {
     authenticationApiUrl: {
       type: String,
+      default: process.env.VUE_APP_AUTHENTICATION_API_URL,
     },
     authenticationFrontUrl: {
       type: String,
+      default: process.env.VUE_APP_AUTHENTICATION_FRONT_URL,
     },
   },
   data(){
